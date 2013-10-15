@@ -7,8 +7,8 @@ package sundial;
  * Sources include:
  * http://www.dreamincode.net/forums/topic/17705-basic-gui-concepts/
  * @ Authors: Chriselle TOguchi, Eric Tomiyasu, Lawton Takaesu
- * @ Date: 4/30/2013
- * @ Version: 1.0
+ * @ Date: Fall 2013
+ * @ Version: 2.0
  */
 
 
