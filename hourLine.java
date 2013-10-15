@@ -3,9 +3,9 @@
  * Calculates the longitude correction using standard meridiam
  * 
  * 
- * @ Authors: Chriselle Toguchi, Matt Kanda, Samuel Kim
- * @ Date: 4/30/2013
- * @ Version: 1.0
+ * @ Authors: Chriselle TOguchi, Eric Tomiyasu, Lawton Takaesu
+ * @ Date: Fall 2013
+ * @ Version: 2.0
  ****************************/
 package sundial;
 import java.util.*;
