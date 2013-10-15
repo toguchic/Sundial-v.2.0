@@ -6,7 +6,7 @@ package sundial;
  * 
  * Sources include:
  * http://www.dreamincode.net/forums/topic/17705-basic-gui-concepts/
- * @ Authors: Chriselle TOguchi, Matt Kanda, Samuel Kim
+ * @ Authors: Chriselle TOguchi, Eric Tomiyasu, Lawton Takaesu
  * @ Date: 4/30/2013
  * @ Version: 1.0
  */
@@ -70,7 +70,7 @@ public class DialPane1 extends JFrame {
 	
 		
 		
-		//Add things to the pane in the order you want them to appear (left to right, top to bottom)
+		//Add things to the pane (left to right, top to bottom)
 		pane.add(monthL);
 		pane.add(monthTF);
 		pane.add(dayL);
@@ -265,7 +265,7 @@ public class DialPane1 extends JFrame {
 	}
 	
 	
-	
+	//Main
 	public static void main(String[] args)
 	{
 		DialPane1 input = new DialPane1();
