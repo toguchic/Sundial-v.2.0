@@ -1,9 +1,9 @@
 /**************************
  * Calculates Equaton of Time
  * 
- * @ Authors: Chriselle TOguchi, Matt Kanda, Samuel Kim
- * @ Date: 4/30/2013
- * @ Version: 1.0
+ * @ Authors: Chriselle TOguchi, Eric Tomiyasu, Lawton Takaesu
+ * @ Date: Fall 2013
+ * @ Version: 2.0
  * 
  * 
  * *****************************/
