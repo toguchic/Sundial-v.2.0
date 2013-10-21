@@ -217,13 +217,6 @@ public class DialPane1 extends JFrame {
 			}
 		
 		
-		
-	    	Font font = new Font("Arial", Font.PLAIN, 20);
-		    g.setFont(font);
-			g.drawString("Time Zone Not In Program! Please close window", 100, 340);
-			return;
-		}
-		
 			//Draws the AM hour lines
 			for(int i = 0; i <= 6 ; i++){
 				x = (int) (340 - 250 * Math.cos(Math.toRadians(hourAngle[i])));
