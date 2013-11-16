@@ -52,7 +52,10 @@ public class DialPane1 extends JFrame {
             yearTF = new javax.swing.JTextField();
             monthCB = new javax.swing.JComboBox();
             dayCB = new javax.swing.JComboBox();
-
+            submitB = new JButton();
+            clearB = new JButton();
+            exitB = new JButton();
+            
             setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
             setTitle("Sundial Input");
             setFocusCycleRoot(false);
@@ -100,6 +103,15 @@ public class DialPane1 extends JFrame {
             dayCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
             dayCB.setToolTipText("Select the day");
 
+            
+            //Specify handlers for each button and add (register) ActionListeners to each button.
+            sbHandler = new SubmitButtonHandler();
+            submitB.addActionListener(sbHandler);
+            ebHandler = new ExitButtonHandler();
+            exitB.addActionListener(ebHandler);
+            cbHandler = new ClearButtonHandler();
+            clearB.addActionListener(cbHandler);
+            
             submitB.setText("Submit");
             submitB.setToolTipText("Submit");
 
@@ -173,15 +185,7 @@ public class DialPane1 extends JFrame {
                         .addComponent(exitB))
                     .addContainerGap())
             );
-                
-                //Specify handlers for each button and add (register) ActionListeners to each button.
-                sbHandler = new SubmitButtonHandler();
-                submitB.addActionListener(sbHandler);
-                ebHandler = new ExitButtonHandler();
-                exitB.addActionListener(ebHandler);
-                cbHandler = new ClearButtonHandler();
-                clearB.addActionListener(cbHandler);
-                
+             
                 setSize(WIDTH, HEIGHT);
                 setVisible(true);
                 setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -256,30 +260,30 @@ public class DialPane1 extends JFrame {
         
         private class PrintButtonHandler implements Printable, ActionListener
         {
-                public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
 		        PrinterJob job = PrinterJob.getPrinterJob();
 		        job.setPrintable(this);
 		        boolean ok = job.printDialog();
 		        if (ok) {
-		        try {
-		        	job.print();
-		        } catch (PrinterException ex) {
-		        	/* The job did not successfully complete */
+			        try {
+			        	job.print();
+			        } catch (PrinterException ex) {
+			        	/* The job did not successfully complete */
+			        }
 		        }
-         }
-        
-         }
+    
+            }
                 
-                public int print(Graphics g, PageFormat pf, int page) throws PrinterException {
-                                DrawPane d = new DrawPane();
-                        
-                 if (page > 0) {
-                	 return NO_SUCH_PAGE;
-                 }
-                 d.paint(g);
-                
-                 return PAGE_EXISTS;
-                }
+	        public int print(Graphics g, PageFormat pf, int page) throws PrinterException {
+                DrawPane d = new DrawPane();
+	                
+		         if (page > 0) {
+		        	 return NO_SUCH_PAGE;
+		         }
+		         d.paint(g);
+		        
+		         return PAGE_EXISTS;
+	        }
         }
         
         
@@ -299,11 +303,12 @@ public class DialPane1 extends JFrame {
                 try{
                         longitude = Double.parseDouble(longTF.getText());
                         latitude = Double.parseDouble(latTF.getText());
-                        m = getMonth();
-                        d = getDay();
+                        m = monthCB.getSelectedIndex() + 1;
+                        d = dayCB.getSelectedIndex() + 1;
                         yr = Integer.parseInt(yearTF.getText());
                         tzone = timeZoneTF.getText();
-                        checkDate();
+                        if(!checkDate(m, d, yr))
+                        	throw new NumberFormatException();
                 }
                 catch(NumberFormatException e){
                  Font font = new Font("Arial", Font.PLAIN, 20);
@@ -311,10 +316,7 @@ public class DialPane1 extends JFrame {
                         g.drawString("Input Error! Please close window", 200, 340);
                         return;
                 }
-                
-                
-        
-                
+
                 //Calculates the Equation of Time given the date
                 EOT eot = new EOT();
                 eotAdjust = eot.EqOfT(m, d, yr);
@@ -327,7 +329,6 @@ public class DialPane1 extends JFrame {
                                 hourAngle[i-6] = hour;
                         //System.out.println("Calculated Hour " + i + " is: " + hourAngle[i-6]);
                         }
-                
                 
                         //Draws the AM hour lines
                         for(int i = 0; i <= 6 ; i++){
@@ -351,11 +352,6 @@ public class DialPane1 extends JFrame {
                                 g.drawLine(x, y, 340, 340);
                         }
                 
-                
-                
-                
-                
-                
                 //Creates Gnomon coordinates based on the Latitude
                 int gx = (int) (340 - 250 * Math.cos(Math.toRadians(latitude)));
                 int gy = (int) (590 - 250 * Math.sin(Math.toRadians(latitude)));
@@ -365,39 +361,50 @@ public class DialPane1 extends JFrame {
                 g.drawLine(340, 590, gx, gy);
                 g.drawLine(gx,gy,90,590);
 
-
                 }
                 
                 /**
-                 * Helper method to parse input from the month Combobox 
-                 * @return numerical value for the month selected
+                 * Helper function to determine if the inputed date is valid.
+                 * Takes into account leap years.
+                 * @param month	- inputed month
+                 * @param day	- inputed day
+                 * @param year	- inputed year
+                 * @return true if the date is valid, false otherwise
                  */
-                private int getMonth(){
-                	return monthCB.getSelectedIndex() + 1;
-                }
-                
-                /**
-                 * Helper method to parse input from the day Combobox 
-                 * @return numerical value for the day selected
-                 */
-                private int getDay(){
-                	return dayCB.getSelectedIndex() + 1;
-                }
-                
-                private void checkDate() throws NumberFormatException{
+                private boolean checkDate(int month, int day, int year){
                 	
+                	boolean result = true;
+                	
+                	//check if month == February and if it is a leap year
+                	if(month == 2){
+                		if(year % 4 != 0 && day > 28){
+                			result = false;
+                		}
+                		else if (year % 4 == 0 && day > 29){
+                			result = false;
+                		}
+                	}
+                	else{
+                		//even months before July all have 30 days
+                		if(month % 2 == 0 && month < 7 && day > 30){
+                			result = false; 
+                		}
+                		//odd months after July have 30 days
+                		else if (month % 2 == 1 && month > 7 && day > 30){
+                			result = false;
+                		}
+                	}
+                	
+                	
+                	return result;
                 }
         }
-        
         
         //Main
         public static void main(String[] args)
         {
                 DialPane1 input = new DialPane1();
                 
-        }
-        
-        
-        
+        } 
         
 }
