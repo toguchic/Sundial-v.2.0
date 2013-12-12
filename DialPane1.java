@@ -10,7 +10,7 @@
 */
 
 
-package sundial;
+//package sundial;
 
 import java.awt.*;
 
@@ -19,15 +19,15 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.print.*;
 
-public class DialPane1 extends JFrame {
+public class dialpane1 extends JFrame {
   
         
         private static final int WIDTH = 450;
         private static final int HEIGHT = 274;
         
         private JLabel monthL, dayL, yearL, timeZoneL, latL, longL;
-        private JTextField yearTF, timeZoneTF, latTF, longTF;
-        private JComboBox monthCB, dayCB;
+        private JTextField yearTF, latTF, longTF;
+        private JComboBox monthCB, dayCB, timezoneCB;
         private JButton submitB, exitB, printB, clearB;
         
         
@@ -37,25 +37,30 @@ public class DialPane1 extends JFrame {
         private PrintButtonHandler pbHandler;
         private ClearButtonHandler cbHandler;
         
+        //Array of standard meridians
+        private int[] meridians;
         
-        public DialPane1()
+        
+        public dialpane1()
         {
-            monthL = new javax.swing.JLabel();
+        	meridians = new int[] {0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, -180, -165, -150, -135, -120, -105, -90, -75, -60, -45, -30, -15 };
+        	
+        	monthL = new javax.swing.JLabel();
             dayL = new javax.swing.JLabel();
             yearL = new javax.swing.JLabel();
             timeZoneL = new javax.swing.JLabel();
             latL = new javax.swing.JLabel();
             longL = new javax.swing.JLabel();
-            timeZoneTF = new javax.swing.JTextField();
             latTF = new javax.swing.JTextField();
             longTF = new javax.swing.JTextField();
             yearTF = new javax.swing.JTextField();
             monthCB = new javax.swing.JComboBox();
             dayCB = new javax.swing.JComboBox();
-            submitB = new JButton();
-            clearB = new JButton();
-            exitB = new JButton();
-            
+            submitB = new javax.swing.JButton();
+            clearB = new javax.swing.JButton();
+            exitB = new javax.swing.JButton();
+            timezoneCB = new javax.swing.JComboBox();
+
             setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
             setTitle("Sundial Input");
             setFocusCycleRoot(false);
@@ -81,18 +86,13 @@ public class DialPane1 extends JFrame {
             longL.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
             longL.setText("Longitude:");
 
-            timeZoneTF.setColumns(10);
-            timeZoneTF.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-            timeZoneTF.setToolTipText("Input the current time zone");
-
             latTF.setColumns(10);
             latTF.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
             latTF.setToolTipText("Input the latitude of your current location");
-            
+          
             longTF.setColumns(10);
             longTF.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
             longTF.setToolTipText("Input the longitude of your current location");
-            
 
             yearTF.setColumns(4);
             yearTF.setToolTipText("Input the year");
@@ -103,15 +103,6 @@ public class DialPane1 extends JFrame {
             dayCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
             dayCB.setToolTipText("Select the day");
 
-            
-            //Specify handlers for each button and add (register) ActionListeners to each button.
-            sbHandler = new SubmitButtonHandler();
-            submitB.addActionListener(sbHandler);
-            ebHandler = new ExitButtonHandler();
-            exitB.addActionListener(ebHandler);
-            cbHandler = new ClearButtonHandler();
-            clearB.addActionListener(cbHandler);
-            
             submitB.setText("Submit");
             submitB.setToolTipText("Submit");
 
@@ -120,6 +111,8 @@ public class DialPane1 extends JFrame {
 
             exitB.setText("Exit");
             exitB.setToolTipText("Exit");
+
+            timezoneCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "UTC", "UTC +1 ", "UTC +2", "UTC +3", "UTC +4", "UTC +5", "UTC +6", "UTC +7", "UTC +8", "UTC +9", "UTC +10", "UTC +11", "UTC +12", "UTC -12", "UTC -11", "UTC -10", "UTC -9", "UTC -8", "UTC -7", "UTC -6", "UTC -5", "UTC -4", "UTC -3", "UTC -2", "UTC -1" }));
 
             javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
             getContentPane().setLayout(layout);
@@ -146,13 +139,13 @@ public class DialPane1 extends JFrame {
                             .addComponent(yearL)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(yearTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(timeZoneTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(latTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(longTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(clearB)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(exitB)))
+                            .addComponent(exitB))
+                        .addComponent(timezoneCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addContainerGap(40, Short.MAX_VALUE))
             );
             layout.setVerticalGroup(
@@ -168,8 +161,8 @@ public class DialPane1 extends JFrame {
                         .addComponent(yearTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGap(18, 18, 18)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(timeZoneL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(timeZoneTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(timeZoneL, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
+                        .addComponent(timezoneCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(latL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -185,6 +178,7 @@ public class DialPane1 extends JFrame {
                         .addComponent(exitB))
                     .addContainerGap())
             );
+
              
                 setSize(WIDTH, HEIGHT);
                 setVisible(true);
@@ -192,7 +186,7 @@ public class DialPane1 extends JFrame {
         }
         
         JFrame frameToPrint;
-        public DialPane1(JFrame f){
+        public dialpane1(JFrame f){
                 frameToPrint = f;
         }
         
@@ -295,9 +289,9 @@ public class DialPane1 extends JFrame {
                 double longitude, latitude, hour, eotAdjust, timeZoneAdjust;
                 double [] hourAngle = new double [7];
                 int m , d, yr, x, y;
-                String tzone;
+                int tzone;
                 //Create instance of hourLine
-                hourLine gMon = new hourLine();
+                hourLine2 gMon = new hourLine2();
                                 
                 //Assigns data that is entered into the fields.
                 try{
@@ -306,7 +300,7 @@ public class DialPane1 extends JFrame {
                         m = monthCB.getSelectedIndex() + 1;
                         d = dayCB.getSelectedIndex() + 1;
                         yr = Integer.parseInt(yearTF.getText());
-                        tzone = timeZoneTF.getText();
+                        tzone = timezoneCB.getSelectedIndex();
                         if(!checkDate(m, d, yr))
                         	throw new NumberFormatException();
                 }
@@ -318,7 +312,7 @@ public class DialPane1 extends JFrame {
                 }
 
                 //Calculates the Equation of Time given the date
-                EOT eot = new EOT();
+                eot eot = new eot();
                 eotAdjust = eot.EqOfT(m, d, yr);
                 //Calculates Time Zone Adjustments
                 timeZoneAdjust = gMon.longitudeCorrection(longitude, tzone);
@@ -398,12 +392,13 @@ public class DialPane1 extends JFrame {
                 	
                 	return result;
                 }
+                
         }
         
         //Main
         public static void main(String[] args)
         {
-                DialPane1 input = new DialPane1();
+                dialpane1 input = new dialpane1();
                 
         } 
         
