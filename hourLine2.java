@@ -13,7 +13,7 @@ import java.util.*;
 public class hourLine2{
         
         private double [] degreeArray = new double [7];
-        private int [] stdMeridian ={0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, -180, -165, -150, -135, -120, -105, -90, -75, -60, -45, -30, -15 };
+        private int [] stdMeridian ={0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 180, 165, 150, 135, 120, 105, 90, 75, 60, 45, 30, 15 };
     	
         //private String [] stdMeridianLocations = {"Japan", "New York", "Chicago", "Denver", "Hawaii"};
         
@@ -42,10 +42,11 @@ public class hourLine2{
          * @param timezone timezone entered by the user
          * @returns correction in degrees
          */
-           public double longitudeCorrection(double lng, int timeZone){
+           public int longitudeCorrection(double lng, int timeZone){
                 
-                double test = (Math.abs(lng) - stdMeridian[timeZone]) * 4;
+               int test = (int) (Math.abs(lng) - stdMeridian[timeZone]);
                 System.out.println("LongitudeCorrection:" + test);
+                System.out.println("Standard Meridian: " + stdMeridian[timeZone]);
                 return test;
                 
                /*
