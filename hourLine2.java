@@ -41,27 +41,29 @@ public class hourLine{
          * @param timezone timezone entered by the user
          * @returns correction in degrees
          */
-        public int longitudeCorrection(double lng, String timeZone){
-              /*  int stdMeridianIndex = 0;
+           public double longitudeCorrection(double lng, String timeZone){
+                int stdMeridianIndex = 0;
                 for(int i = 0; i < stdMeridianLocations.length; i++){
                         if(timeZone.equalsIgnoreCase(stdMeridianLocations[i])){
                                 stdMeridianIndex = i;
                                 System.out.println("Calculating for timezone: " + stdMeridianLocations[i]);
                         }
-                        else{
-                                return 0;
-                        }
+                       
                 }
-           
-                return stdMeridian[stdMeridianIndex] - Math.abs(lng);
-                */
-        	 TimeZone defaultTimezone = TimeZone.getDefault();
+                double test = (Math.abs(lng) - stdMeridian[stdMeridianIndex]) * 4;
+                System.out.println("LongitudeCorrection:" + test);
+                return test;
+                
+               /*
+        	 TimeZone defaultTimezone = TimeZone.getTimeZone(timeZone);
         	    Calendar calendar = new GregorianCalendar(defaultTimezone);
         	    System.out.println("CALENDAR TIME"+calendar.getTime());
-        	    
-           
+        	   
             int daylight = defaultTimezone.getDSTSavings();
-            return daylight;
+            System.out.println("Daylight Savings: " + daylight);
+            int test = 1;
+            return test;
+            */
         }
         
         
