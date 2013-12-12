@@ -291,7 +291,7 @@ public class dialpane1 extends JFrame {
         //Calculates Adjusted Hour lines and Draws
         public class DrawPane extends JPanel{
                 public void paint(Graphics g){
-                g.drawArc(90,90,500,500,0,180);//Semi Circle
+               
                 
                 double longitude, latitude, hour, eotAdjust;
                 double [] hourAngle = new double [7];
@@ -333,9 +333,10 @@ public class dialpane1 extends JFrame {
                 
                         //Draws the AM hour lines
                         for(int i = 0; i <= 6 ; i++){
+                        	System.out.println("AM HOUR LINE: " + hourAngle[i]);
                                 x = (int) (340 - 250 * Math.cos(Math.toRadians(hourAngle[i])));
                                 x = x - (int) eotAdjust + timeZoneAdjust;
-                                System.out.println("x -> " + x);
+                                
                                 y = (int) (340 - 250 * Math.sin(Math.toRadians(hourAngle[i])));
                                 y = y - (int) eotAdjust + timeZoneAdjust;
                                 System.out.println("y-> " + y);
@@ -345,9 +346,10 @@ public class dialpane1 extends JFrame {
                 
                         //Draws the PM hour lines
                         for(int i = 1; i <= 6 ; i++){
+                        	System.out.println("PM HOUR LINE: " + hourAngle[i]);
                                 y = (int) (340 - 250 * Math.sin(Math.toRadians(hourAngle[i])));
                                 y = y - (int) eotAdjust + timeZoneAdjust;
-                                System.out.println("y-> " + y);
+                                
                                 x = (int) (340 + 250 * Math.cos(Math.toRadians(hourAngle[i])));
                                 x = x + (int) eotAdjust - timeZoneAdjust;
                                 g.drawLine(x, y, 340, 340);
