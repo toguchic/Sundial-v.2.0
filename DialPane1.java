@@ -43,8 +43,7 @@ public class dialpane1 extends JFrame {
         
         public dialpane1()
         {
-        	meridians = new int[] {0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, -180, -165, -150, -135, -120, -105, -90, -75, -60, -45, -30, -15 };
-        	
+                    	
         	monthL = new javax.swing.JLabel();
             dayL = new javax.swing.JLabel();
             yearL = new javax.swing.JLabel();
@@ -61,6 +60,11 @@ public class dialpane1 extends JFrame {
             exitB = new javax.swing.JButton();
             timezoneCB = new javax.swing.JComboBox();
 
+            sbHandler = new SubmitButtonHandler();
+            cbHandler = new ClearButtonHandler();
+            pbHandler = new PrintButtonHandler();
+            ebHandler = new ExitButtonHandler();
+            
             setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
             setTitle("Sundial Input");
             setFocusCycleRoot(false);
@@ -105,12 +109,15 @@ public class dialpane1 extends JFrame {
 
             submitB.setText("Submit");
             submitB.setToolTipText("Submit");
+            submitB.addActionListener(sbHandler);
 
             clearB.setText("Clear");
             clearB.setToolTipText("Clear");
+            clearB.addActionListener(cbHandler);
 
             exitB.setText("Exit");
             exitB.setToolTipText("Exit");
+            exitB.addActionListener(ebHandler);
 
             timezoneCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "UTC", "UTC +1 ", "UTC +2", "UTC +3", "UTC +4", "UTC +5", "UTC +6", "UTC +7", "UTC +8", "UTC +9", "UTC +10", "UTC +11", "UTC +12", "UTC -12", "UTC -11", "UTC -10", "UTC -9", "UTC -8", "UTC -7", "UTC -6", "UTC -5", "UTC -4", "UTC -3", "UTC -2", "UTC -1" }));
 
@@ -284,11 +291,11 @@ public class dialpane1 extends JFrame {
         //Calculates Adjusted Hour lines and Draws
         public class DrawPane extends JPanel{
                 public void paint(Graphics g){
-              
+                g.drawArc(90,90,500,500,0,180);//Semi Circle
                 
-                double longitude, latitude, hour, eotAdjust, timeZoneAdjust;
+                double longitude, latitude, hour, eotAdjust;
                 double [] hourAngle = new double [7];
-                int m , d, yr, x, y;
+                int m , d, yr, x, y, timeZoneAdjust;
                 int tzone;
                 //Create instance of hourLine
                 hourLine2 gMon = new hourLine2();
@@ -326,25 +333,23 @@ public class dialpane1 extends JFrame {
                 
                         //Draws the AM hour lines
                         for(int i = 0; i <= 6 ; i++){
-                        	System.out.println("AM HOUR ANGLE: " +hourAngle[i]);
                                 x = (int) (340 - 250 * Math.cos(Math.toRadians(hourAngle[i])));
-                                x = x - (int) eotAdjust + (int) timeZoneAdjust;
-                               
+                                x = x - (int) eotAdjust + timeZoneAdjust;
+                                System.out.println("x -> " + x);
                                 y = (int) (340 - 250 * Math.sin(Math.toRadians(hourAngle[i])));
-                                y = y - (int) eotAdjust + (int) timeZoneAdjust;
-                                
+                                y = y - (int) eotAdjust + timeZoneAdjust;
+                                System.out.println("y-> " + y);
                                 g.drawLine(x, y, 340, 340);
                         
                         }
                 
                         //Draws the PM hour lines
                         for(int i = 1; i <= 6 ; i++){
-                        	System.out.println("PM HOUR ANGLE: " +hourAngle[i]);
                                 y = (int) (340 - 250 * Math.sin(Math.toRadians(hourAngle[i])));
-                                y = y - (int) eotAdjust + (int) timeZoneAdjust;
-                                
+                                y = y - (int) eotAdjust + timeZoneAdjust;
+                                System.out.println("y-> " + y);
                                 x = (int) (340 + 250 * Math.cos(Math.toRadians(hourAngle[i])));
-                                x = x + (int) eotAdjust - (int) timeZoneAdjust;
+                                x = x + (int) eotAdjust - timeZoneAdjust;
                                 g.drawLine(x, y, 340, 340);
                         }
                 
